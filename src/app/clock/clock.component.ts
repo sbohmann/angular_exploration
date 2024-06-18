@@ -36,7 +36,8 @@ export class ClockComponent implements AfterViewInit {
   private lastWidth: Number
   private lastHeight: Number
 
-  constructor() {}
+  constructor() {
+  }
 
   ngAfterViewInit() {
     console.log("Offset:", this.offset)
@@ -89,11 +90,11 @@ export class ClockComponent implements AfterViewInit {
     let currentDate = new Date()
     let localTimestamp
     if (Number.isInteger(this.offset)) {
-      localTimestamp = currentDate.getTime() -
-      this.offset * 60_000
+      localTimestamp = currentDate.getTime() +
+        this.offset * 60_000
     } else {
       localTimestamp = currentDate.getTime() -
-      currentDate.getTimezoneOffset() * 60_000
+        currentDate.getTimezoneOffset() * 60_000
     }
     let millisecondOfDay = localTimestamp % millisecondsPerDay
 
