@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core'
+import {AfterViewInit, Component, ElementRef, Input, numberAttribute, ViewChild} from '@angular/core'
 
 const secondsPerDay = 60 * 60 * 24
 const millisecondsPerDay = 1000 * secondsPerDay
@@ -26,6 +26,9 @@ export class ClockComponent implements AfterViewInit {
   @ViewChild('handsCanvas')
   private handsCanvasView: ElementRef<HTMLCanvasElement>
 
+  @Input({transform: numberAttribute})
+  private offset: number
+
   private faceCanvas: HTMLCanvasElement
   private handsCanvas: HTMLCanvasElement
 
@@ -36,6 +39,7 @@ export class ClockComponent implements AfterViewInit {
   constructor() {}
 
   ngAfterViewInit() {
+    console.log("Offset:", this.offset)
     this.faceCanvas = this.faceCanvasView.nativeElement
     this.faceCanvas.classList.add('face-canvas')
     this.clockView.nativeElement.appendChild(this.faceCanvas)
@@ -83,8 +87,14 @@ export class ClockComponent implements AfterViewInit {
     let centerY = height / 2
 
     let currentDate = new Date()
-    let localTimestamp = currentDate.getTime() -
+    let localTimestamp
+    if (Number.isInteger(this.offset)) {
+      localTimestamp = currentDate.getTime() -
+      this.offset * 60_000
+    } else {
+      localTimestamp = currentDate.getTime() -
       currentDate.getTimezoneOffset() * 60_000
+    }
     let millisecondOfDay = localTimestamp % millisecondsPerDay
 
     if (!sameSize) {
